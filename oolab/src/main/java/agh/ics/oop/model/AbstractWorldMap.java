@@ -8,8 +8,6 @@ import java.util.Set;
 
 public abstract class AbstractWorldMap implements WorldMap{
     protected Map<Vector2d, Animal> animals = new HashMap<>();
-    protected Vector2d lowerLeft;
-    protected Vector2d upperRight;
     protected MapVisualizer visualizer;
 
     public Set<WorldElement> getElements() {
@@ -46,7 +44,7 @@ public abstract class AbstractWorldMap implements WorldMap{
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return position.follows(lowerLeft) && position.precedes(upperRight) && !(animals.containsKey(position));
+        return !(animals.containsKey(position));
     }
 
     @Override

@@ -9,8 +9,6 @@ public class GrassField extends AbstractWorldMap {
 
     public GrassField(int grassQauntity) {
         super();
-        lowerLeft = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
-        upperRight = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
         grassUpperRange = (int) Math.sqrt(grassQauntity * 10);
 
         placeGrass(grassQauntity);
