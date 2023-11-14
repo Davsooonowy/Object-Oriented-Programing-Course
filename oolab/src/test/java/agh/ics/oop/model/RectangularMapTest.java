@@ -10,7 +10,7 @@ public class RectangularMapTest {
     public void canMoveToTest(){
         RectangularMap map = new RectangularMap(3,3);
         assertEquals(map.canMoveTo(new Vector2d(1,1)),true);
-        assertEquals(map.canMoveTo(new Vector2d(3,3)),true);
+        assertEquals(map.canMoveTo(new Vector2d(3,3)),false);
         assertEquals(map.canMoveTo(new Vector2d(0,0)),true);
         assertEquals(map.canMoveTo(new Vector2d(4,4)),false);
         assertEquals(map.canMoveTo(new Vector2d(-1,-1)),false);
@@ -21,7 +21,7 @@ public class RectangularMapTest {
         RectangularMap map = new RectangularMap(3,3);
         assertEquals(map.place(new Animal(new Vector2d(1,1),MapDirection.NORTH)),true);
         assertEquals(map.place(new Animal(new Vector2d(1,1),MapDirection.NORTH)),false);
-        assertEquals(map.place(new Animal(new Vector2d(3,3),MapDirection.NORTH)),true);
+        assertEquals(map.place(new Animal(new Vector2d(2,2),MapDirection.NORTH)),true);
         assertEquals(map.place(new Animal(new Vector2d(4,4),MapDirection.NORTH)),false);
         assertEquals(map.place(new Animal(new Vector2d(-1,-1),MapDirection.NORTH)),false);
         assertEquals(map.place(new Animal(new Vector2d(0,0),MapDirection.NORTH)),true);
@@ -50,7 +50,7 @@ public class RectangularMapTest {
 
     @Test
     public void moveTest() {
-        RectangularMap map = new RectangularMap(3, 3);
+        RectangularMap map = new RectangularMap(4, 4);
         Animal animal1 = new Animal(new Vector2d(1, 1),MapDirection.NORTH);
         Animal animal2 = new Animal(new Vector2d(2, 2),MapDirection.NORTH);
         map.place(animal1);
