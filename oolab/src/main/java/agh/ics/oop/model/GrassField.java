@@ -9,8 +9,8 @@ public class GrassField extends AbstractWorldMap {
 
     public GrassField(int grassQauntity) {
         super();
-        super.lowerLeft = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
-        super.upperRight = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        lowerLeft = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        upperRight = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
         grassUpperRange = (int) Math.sqrt(grassQauntity * 10);
 
         placeGrass(grassQauntity);
@@ -36,37 +36,32 @@ public class GrassField extends AbstractWorldMap {
         return super.isOccupied(position) || grasses.containsKey(position);
     }
 
-    Vector2d checkLowerLeft() {
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
+    public Vector2d checkLowerLeft() {
+        Vector2d lowerleft = new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
-        for( Vector2d position: this.animals.keySet() ){
-            minX = Math.min(minX, position.getX());
-            minY = Math.min(minY, position.getY());
+        for (Vector2d position : this.animals.keySet()) {
+            lowerleft = lowerleft.lowerLeft(position);
         }
 
-        for(Vector2d position: this.grasses.keySet()){
-            minX = Math.min(minX, position.getX());
-            minY = Math.min(minY, position.getY());
+        for (Vector2d position : this.grasses.keySet()) {
+            lowerleft = lowerleft.lowerLeft(position);
         }
 
-        return new Vector2d(minX, minY);
+        return lowerleft;
     }
-    Vector2d checkUpperRight() {
-        int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
 
-        for( Vector2d position: this.animals.keySet() ){
-            maxX = Math.max(maxX, position.getX());
-            maxY = Math.max(maxY, position.getY());
+    public Vector2d checkUpperRight() {
+        Vector2d upperright = new Vector2d(Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+        for (Vector2d position : this.animals.keySet()) {
+            upperright = upperright.upperRight(position);
         }
 
-        for(Vector2d position: this.grasses.keySet()){
-            maxX = Math.max(maxX, position.getX());
-            maxY = Math.max(maxY, position.getY());
+        for (Vector2d position : this.grasses.keySet()) {
+            upperright = upperright.upperRight(position);
         }
 
-        return new Vector2d(maxX, maxY);
+        return upperright;
     }
 
     public String toString(){
