@@ -3,7 +3,7 @@ package agh.ics.oop.model;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RectangularMapTest {
     @Test
@@ -17,18 +17,22 @@ public class RectangularMapTest {
     }
 
     @Test
-    public void placeTest(){
+    public void placeTest() throws PositionAlreadyOccupiedException {
         RectangularMap map = new RectangularMap(3,3);
-        assertEquals(map.place(new Animal(new Vector2d(1,1),MapDirection.NORTH)),true);
-        assertEquals(map.place(new Animal(new Vector2d(1,1),MapDirection.NORTH)),false);
-        assertEquals(map.place(new Animal(new Vector2d(2,2),MapDirection.NORTH)),true);
-        assertEquals(map.place(new Animal(new Vector2d(4,4),MapDirection.NORTH)),false);
-        assertEquals(map.place(new Animal(new Vector2d(-1,-1),MapDirection.NORTH)),false);
-        assertEquals(map.place(new Animal(new Vector2d(0,0),MapDirection.NORTH)),true);
+        Animal animal1 = new Animal(new Vector2d(1,1),MapDirection.NORTH);
+        Animal animal2 = new Animal(new Vector2d(2,2),MapDirection.NORTH);
+        map.place(animal1);
+        map.place(animal2);
+        assertThrowsExactly(PositionAlreadyOccupiedException.class, () -> map.place(animal1));
+        assertThrowsExactly(PositionAlreadyOccupiedException.class, () -> map.place(animal2));
+        assertThrows(PositionAlreadyOccupiedException.class, () -> map.place(new Animal(new Vector2d(1,1),MapDirection.NORTH)));
+        assertEquals(map.objectAt(new Vector2d(1,1)),animal1);
+        assertEquals(map.objectAt(new Vector2d(2,2)),animal2);
+        assertNull(map.objectAt(new Vector2d(3, 3)));
     }
 
     @Test
-    public void isOccupiedTest(){
+    public void isOccupiedTest() throws PositionAlreadyOccupiedException {
         RectangularMap map = new RectangularMap(3,3);
         map.place(new Animal(new Vector2d(1,1),MapDirection.NORTH));
         assertEquals(map.isOccupied(new Vector2d(1,1)),true);
@@ -37,7 +41,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    public void objectAtTest(){
+    public void objectAtTest() throws PositionAlreadyOccupiedException {
         RectangularMap map = new RectangularMap(4,4);
         Animal animal1 = new Animal(new Vector2d(1,0), MapDirection.NORTH);
         Animal animal2 = new Animal(new Vector2d(2,2), MapDirection.NORTH);
@@ -49,7 +53,7 @@ public class RectangularMapTest {
     }
 
     @Test
-    public void moveTest() {
+    public void moveTest() throws PositionAlreadyOccupiedException {
         RectangularMap map = new RectangularMap(4, 4);
         Animal animal1 = new Animal(new Vector2d(1, 1),MapDirection.NORTH);
         Animal animal2 = new Animal(new Vector2d(2, 2),MapDirection.NORTH);

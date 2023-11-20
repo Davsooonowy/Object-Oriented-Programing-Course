@@ -18,12 +18,15 @@ public class Simulation {
     }
 
     private void addAnimals() {
-        for (Vector2d move : coordinates) {
-            Animal animal = new Animal(move, MapDirection.NORTH);
-            if (map.place(animal)) {
-                map.place(animal);
-                animals.add(animal);
+        try {
+            for (Vector2d move : coordinates) {
+                Animal animal = new Animal(move, MapDirection.NORTH);
+                    map.place(animal);
+                    animals.add(animal);
             }
+        }
+        catch (PositionAlreadyOccupiedException ignored) {
+            System.out.println(ignored.getMessage());
         }
     }
 
@@ -36,7 +39,6 @@ public class Simulation {
             Animal animal = animals.get(i % animals.size());
             MoveDirection direction = directions.get(i);
             map.move(animal, direction);
-            System.out.println(map.toString());
         }
     }
 }

@@ -9,8 +9,9 @@ public class World {
         System.out.println("Start");
 
         GrassField map2 = new GrassField(10);
-        List<MoveDirection> directions2 = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "f", "f", "f", "f", "f", "f"});
-        List<Vector2d> positions2 = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
+        map2.addListener(new ConsoleMapDisplay());
+        List<MoveDirection> directions2 = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f", "f", "r", "r", "f"});
+        List<Vector2d> positions2 = List.of(new Vector2d(2, 2), new Vector2d(3, 2));
         Simulation simulation2 = new Simulation(directions2, positions2, map2);
         simulation2.run();
         Set<WorldElement> elements = map2.getElements();
