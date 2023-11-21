@@ -18,15 +18,14 @@ public class Simulation {
     }
 
     private void addAnimals() {
-        try {
-            for (Vector2d move : coordinates) {
-                Animal animal = new Animal(move, MapDirection.NORTH);
-                    map.place(animal);
-                    animals.add(animal);
+        for (Vector2d move : coordinates) {
+            Animal animal = new Animal(move, MapDirection.NORTH);
+            try {
+                map.place(animal);
+                animals.add(animal);
+            } catch (PositionAlreadyOccupiedException ignored) {
+                System.out.println(ignored.getMessage());
             }
-        }
-        catch (PositionAlreadyOccupiedException ignored) {
-            System.out.println(ignored.getMessage());
         }
     }
 

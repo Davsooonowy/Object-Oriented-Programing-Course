@@ -64,17 +64,12 @@ public abstract class AbstractWorldMap implements WorldMap{
         listeners.remove(listener);
     }
 
-    public String mapChanged(Animal animal, Vector2d oldPosition, Vector2d newPosition) {
-        String result = "";
-        if (oldPosition == null){
-            result = "New animal " + animal.toString() + " placed on the map at " + newPosition.toString();
+    private void mapChanged(Animal animal, Vector2d oldPosition, Vector2d newPosition) {
+        String action = (oldPosition == null) ? "placed at" : "moved from " + oldPosition + " to";
+        String result = String.format("Animal %s %s %s", animal, action, newPosition);
+        for (MapChangeListener listener : listeners) {
+            listener.mapChanged(this, result);
         }
-        else{
-            result = "Animal " + animal.toString() + " moved from " + oldPosition.toString() + " to " + newPosition.toString();
-        }
-        for (MapChangeListener listener : listeners)
-            listener.mapChanged(this,result);
-        return result;
     }
     public abstract Boundary getCurrentBounds();
 }
