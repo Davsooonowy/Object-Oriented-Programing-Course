@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GrassFieldTest {
 
@@ -15,28 +14,33 @@ public class GrassFieldTest {
         assertEquals(10, map.getGrassSize());
     }
     @Test
-    public void isOccupiedTest(){
+    public void isOccupiedTest() throws PositionAlreadyOccupiedException {
         GrassField map = new GrassField(10);
         map.place(new Animal(new Vector2d(1,1),MapDirection.NORTH));
-        assertEquals(map.isOccupied(new Vector2d(1,1)),true);
-        assertEquals(map.isOccupied(new Vector2d(1,2)),false);
-        assertEquals(map.isOccupied(new Vector2d(3,3)),false);
+        assertThrowsExactly(PositionAlreadyOccupiedException.class, () -> map.place(new Animal(new Vector2d(1,1),MapDirection.NORTH)));
+        assertFalse(map.isOccupied(new Vector2d(1, 2)));
+        assertFalse(map.isOccupied(new Vector2d(3, 3)));
     }
 
     @Test
-    public void objectAtTest(){
+    public void objectAtTest() throws PositionAlreadyOccupiedException {
         GrassField map = new GrassField(10);
         Animal animal1 = new Animal(new Vector2d(1,0), MapDirection.NORTH);
         Animal animal2 = new Animal(new Vector2d(2,2), MapDirection.NORTH);
+        Animal animal3 = new Animal(new Vector2d(2,2), MapDirection.NORTH);
         map.place(animal1);
+        assertThrowsExactly(PositionAlreadyOccupiedException.class, () -> map.place(animal1));
         map.place(animal2);
+        assertThrowsExactly(PositionAlreadyOccupiedException.class, () -> map.place(animal2));
+        assertThrowsExactly(PositionAlreadyOccupiedException.class, () -> map.place(animal3));
         assertEquals(map.objectAt(new Vector2d(1,0)),animal1);
         assertEquals(map.objectAt(new Vector2d(2,2)),animal2);
+        assertNotEquals(map.objectAt(new Vector2d(2,2)), animal3);
         assertEquals(map.objectAt(new Vector2d(3,3)),null);
     }
 
     @Test
-    public void testCheckLowerLeft() {
+    public void testCheckLowerLeft() throws PositionAlreadyOccupiedException {
         GrassField grassField = new GrassField(10); // Example grass field with 10 grass instances
 
         grassField.place(new Animal(new Vector2d(9, 9), MapDirection.NORTH));
@@ -52,7 +56,7 @@ public class GrassFieldTest {
     }
 
     @Test
-    void testGetElements() {
+    void testGetElements() throws PositionAlreadyOccupiedException {
         GrassField grassField = new GrassField(10);
         Animal animal1 = new Animal(new Vector2d(3, 3), MapDirection.NORTH);
         Animal animal2 = new Animal(new Vector2d(4, 3), MapDirection.NORTH);

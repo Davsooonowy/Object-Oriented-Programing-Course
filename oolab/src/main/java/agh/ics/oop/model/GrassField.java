@@ -62,15 +62,16 @@ public class GrassField extends AbstractWorldMap {
         return upperright;
     }
 
-    public String toString(){
-        return super.toString(checkLowerLeft(), checkUpperRight());
-    }
-
     @Override
     public Set<WorldElement> getElements() {
         Set<WorldElement> elements = super.getElements();
         elements.addAll(grasses.values());
         return elements;
+    }
+
+    @Override
+    public Boundary getCurrentBounds() {
+        return new Boundary(checkLowerLeft(), checkUpperRight());
     }
 
     int getGrassSize(){

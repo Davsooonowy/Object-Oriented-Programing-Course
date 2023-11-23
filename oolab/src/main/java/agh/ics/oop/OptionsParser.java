@@ -23,10 +23,9 @@ public class OptionsParser {
                     directions.add(MoveDirection.RIGHT);
                     break;
                 default:
-                    break;
+                    throw new IllegalArgumentException(arg + " is not legal move specification");
             }
         }
-
         return directions;
     }
 }

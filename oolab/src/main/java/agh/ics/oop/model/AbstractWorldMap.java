@@ -1,14 +1,13 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.MapVisualizer;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 
 public abstract class AbstractWorldMap implements WorldMap{
     protected Map<Vector2d, Animal> animals = new HashMap<>();
     protected MapVisualizer visualizer;
+    protected ArrayList<MapChangeListener> listeners = new ArrayList<>();
 
     public Set<WorldElement> getElements() {
         return new HashSet<>(animals.values());
@@ -16,25 +15,30 @@ public abstract class AbstractWorldMap implements WorldMap{
 
     public AbstractWorldMap() {
         visualizer = new MapVisualizer(this);
+        listeners = new ArrayList<>();
     }
 
-    public String toString(Vector2d lowerLeft, Vector2d upperRight) {
-        return visualizer.draw(lowerLeft, upperRight);
+    public String toString() {
+        Boundary boundaries = getCurrentBounds();
+        return visualizer.draw(boundaries.lowerLeft(), boundaries.upperRight());
     }
     @Override
-    public boolean place(Animal animal) {
+    public void place(Animal animal) throws PositionAlreadyOccupiedException {
         if(canMoveTo(animal.getPosition())){
             animals.put(animal.getPosition(), animal);
-            return true;
+            mapChanged(animal, null, animal.getPosition());
+        }else {
+            throw new PositionAlreadyOccupiedException(animal.getPosition());
         }
-        return false;
     }
 
     @Override
     public void move(Animal animal, MoveDirection direction) {
+        Vector2d oldPosition = animal.getPosition();
         animals.remove(animal.getPosition());
         animal.move(direction, this);
         animals.put(animal.getPosition(), animal);
+        mapChanged(animal, oldPosition, animal.getPosition());
     }
 
     @Override
@@ -51,4 +55,21 @@ public abstract class AbstractWorldMap implements WorldMap{
     public boolean isOccupied(Vector2d position) {
         return animals.containsKey(position);
     }
+
+    public void addListener(MapChangeListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(MapChangeListener listener) {
+        listeners.remove(listener);
+    }
+
+    private void mapChanged(Animal animal, Vector2d oldPosition, Vector2d newPosition) {
+        String action = (oldPosition == null) ? "placed at" : "moved from " + oldPosition + " to";
+        String result = String.format("Animal %s %s %s", animal, action, newPosition);
+        for (MapChangeListener listener : listeners) {
+            listener.mapChanged(this, result);
+        }
+    }
+    public abstract Boundary getCurrentBounds();
 }
