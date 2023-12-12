@@ -36,31 +36,74 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
     }
-    @FXML
+
+private void drawAxes(Boundary boundary) {
+    drawXAxis(boundary);
+    drawYAxis(boundary);
+    Label label = new Label("x/y");
+    label.setMinWidth(50);
+    label.setMinHeight(50);
+    label.setAlignment(Pos.CENTER);
+    mapGrid.add(label, 0, 0);
+
+
+}
+
+private void drawXAxis(Boundary boundary) {
+    for (int j = boundary.lowerLeft().getX(); j <= boundary.upperRight().getX(); j++) {
+        Label label = new Label(Integer.toString(j));
+        label.setMinWidth(50);
+        label.setMinHeight(50);
+        label.setAlignment(Pos.CENTER);
+        mapGrid.add(label, j + 1 - boundary.lowerLeft().getX(), 0); // Dodajemy etykiety osi X na górze siatki
+    }
+}
+
+private void drawYAxis(Boundary boundary) {
+    for (int i = boundary.lowerLeft().getY(); i <= boundary.upperRight().getY(); i++) {
+        Label label = new Label(Integer.toString(i));
+        label.setMinWidth(50);
+        label.setMinHeight(50);
+        label.setAlignment(Pos.CENTER);
+        mapGrid.add(label, 0, boundary.upperRight().getY() - i + 1); // Dodajemy etykiety osi Y po lewej stronie siatki
+    }
+}
+
+@FXML
 public void drawMap() {
     clearGrid();
     Boundary boundary = worldMap.getCurrentBounds();
+    drawAxes(boundary);
+    drawGrid(boundary);
+    infoLabel.setText("");
+}
+
+private void drawGrid(Boundary boundary) {
     for (int i = boundary.lowerLeft().getY(); i <= boundary.upperRight().getY(); i++) {
         for (int j = boundary.lowerLeft().getX(); j <= boundary.upperRight().getX(); j++) {
             Vector2d position = new Vector2d(j, i);
-            WorldElement element = worldMap.objectAt(position);
-            Label label;
-            if (element != null) {
-                label = new Label(element.toString());
-            } else {
-                label = new Label(" ");
-            }
-            label.setMinWidth(50);
-            label.setMinHeight(50);
-//            label.setTextAlignment(TextAlignment.CENTER);
-            label.setAlignment(Pos.CENTER);
-
-            mapGrid.add(label, j, boundary.upperRight().getY() - i);
-//            GridPane.setHalignment(label, HPos.CENTER);
-//            GridPane.setValignment(label, VPos.CENTER);
+            drawGridCell(position, j - boundary.lowerLeft().getX() + 1, boundary.upperRight().getY() - i + 1);
         }
     }
-    infoLabel.setText("");
+}
+
+private void drawGridCell(Vector2d position, int column, int row) {
+    WorldElement element = worldMap.objectAt(position);
+    Label label = createLabelForElement(element);
+    mapGrid.add(label, column, row);
+}
+
+private Label createLabelForElement(WorldElement element) {
+    Label label;
+    if (element != null) {
+        label = new Label(element.toString());
+    } else {
+        label = new Label(" ");
+    }
+    label.setMinWidth(50);
+    label.setMinHeight(50);
+    label.setAlignment(Pos.CENTER);
+    return label;
 }
 
 
@@ -75,8 +118,8 @@ public void drawMap() {
     public void onSimulationStartClicked() {
         String movesString = movesListTextField.getText();
     try {
-        List<MoveDirection> movesList = OptionsParser.parse(movesString.split(" "));
-        Simulation simulation = new Simulation(movesList, List.of(new Vector2d(2, 2) , new Vector2d(5,5)), worldMap);
+        List<MoveDirection> movesList = OptionsParser.parse(movesString.split(""));
+        Simulation simulation = new Simulation(movesList, List.of(new Vector2d(2,2) , new Vector2d(5,5)), worldMap);
         SimulationEngine simulationEngine = new SimulationEngine(new ArrayList<>(List.of(simulation)));
         simulationEngine.runAsync();
         Platform.runLater(() -> startButton.setDisable(true));

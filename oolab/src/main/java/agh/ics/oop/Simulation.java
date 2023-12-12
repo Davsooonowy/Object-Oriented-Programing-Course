@@ -34,16 +34,15 @@ public class Simulation extends Thread {
     }
 
     public void run() {
+        try {
         for (int i = 0; i < directions.size(); i++) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Thread.sleep(1000);
             Animal animal = animals.get(i % animals.size());
             MoveDirection direction = directions.get(i);
             map.move(animal, direction);
-
+        }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
