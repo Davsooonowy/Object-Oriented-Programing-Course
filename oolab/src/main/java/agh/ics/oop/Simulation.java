@@ -5,7 +5,7 @@ import agh.ics.oop.model.*;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Simulation {
+public class Simulation extends Thread {
     private  List<Animal> animals = new ArrayList<>();
     private  List<MoveDirection> directions;
     private List<Vector2d> coordinates;
@@ -34,10 +34,15 @@ public class Simulation {
     }
 
     public void run() {
+        try {
         for (int i = 0; i < directions.size(); i++) {
+            Thread.sleep(1000);
             Animal animal = animals.get(i % animals.size());
             MoveDirection direction = directions.get(i);
             map.move(animal, direction);
+        }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -1,4 +1,4 @@
-package agh.ics.oop.model;
+package agh.ics.oop;
 
 import agh.ics.oop.Simulation;
 
@@ -24,20 +24,9 @@ public class SimulationEngine implements Runnable {
     }
 
     public void runAsync() {
-        threads.clear();
 
-        for (Simulation simulation : simulations) {
-            Thread thread = new Thread(simulation::run);
-            threads.add(thread);
-            thread.start();
-        }
-
-        for (Thread thread : threads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        for(Simulation simulation : this.simulations) {
+            simulation.start();
         }
     }
 
