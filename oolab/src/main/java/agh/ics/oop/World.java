@@ -3,11 +3,10 @@ import agh.ics.oop.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 public class World {
     public static void main(String[] args) {
+        //Application.launch(SimulationApp.class, args);
         try {
             System.out.println("Start");
             List<MoveDirection> directions2 = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f"});
@@ -18,11 +17,12 @@ public class World {
 
             ArrayList<Simulation> simulations = new ArrayList<>();
 
+            MapChangeListener mapChangeListener = new ConsoleMapDisplay();
             for(int i =0; i < 2137; i++) {
                 AbstractWorldMap map = new RectangularMap(10, 10);
                 AbstractWorldMap map1 = new GrassField(10);
-                map.addMapChangeListener(new ConsoleMapDisplay());
-                map1.addMapChangeListener(new ConsoleMapDisplay());
+                map.addMapChangeListener(mapChangeListener);
+                map1.addMapChangeListener(mapChangeListener);
                 simulations.add(new Simulation(directions2, positions2, map));
                 simulations.add(new Simulation(directions3, positions3, map1));
             }
